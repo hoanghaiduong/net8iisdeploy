@@ -1,0 +1,36 @@
+name: Deploy to IIS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: [self-hosted, windows]
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release
+
+    - name: Publish
+      run: dotnet publish -c Release -o ./publish
+
+    - name: Deploy to IIS folder
+      run: |
+        Remove-Item -Recurse -Force "C:\webserver\net8iisdeploy"  # nếu muốn xóa cũ
+        Copy-Item -Recurse -Force ./publish/* "C:\webserver\net8iisdeploy"
+
+    - name: Restart IIS
+      run: |
+        iisreset
