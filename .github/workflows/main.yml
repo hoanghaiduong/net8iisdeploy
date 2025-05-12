@@ -12,10 +12,11 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v3
 
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+#  BỎ bước setup-dotnet nếu đã cài sẵn
+    # - name: Set up .NET
+    #   uses: actions/setup-dotnet@v4
+    #   with:
+    #     dotnet-version: '8.0.x'
 
     - name: Restore dependencies
       run: dotnet restore
