@@ -1,0 +1,6 @@
+@net8iisdeploy_HostAddress = http://localhost:5057
+
+GET {{net8iisdeploy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
