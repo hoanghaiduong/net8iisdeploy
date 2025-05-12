@@ -32,18 +32,9 @@ public class Program
 
         app.MapGet("/", (HttpContext httpContext) =>
         {
-            var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                {
-                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    TemperatureC = Random.Shared.Next(-20, 55),
-                    Summary = summaries[Random.Shared.Next(summaries.Length)]
-                })
-                .ToArray();
-            return forecast;
-        })
-        .WithName("GetWeatherForecast")
-        .WithOpenApi();
+
+            return "Hello World";
+        }).WithOpenApi();
 
         app.Run();
     }
