@@ -29,9 +29,15 @@ jobs:
 
     - name: Deploy to IIS folder
       run: |
-        Remove-Item -Recurse -Force "C:\webserver\net8iisdeploy" -ErrorAction SilentlyContinue
-        Copy-Item -Recurse -Force ./publish/* "C:\webserver\net8iisdeploy"
-
+        if (Test-Path "C:\webserver\net8iisdeploy") {
+          if ((Get-Item "C:\webserver\net8iisdeploy").PSIsContainer) {
+            Remove-Item -Recurse -Force "C:\webserver\net8iisdeploy" -ErrorAction SilentlyContinue
+          } else {
+            Remove-Item -Force "C:\webserver\net8iisdeploy" -ErrorAction SilentlyContinue
+          }
+        }
+        New-Item -ItemType Directory -Path "C:\webserver\net8iisdeploy" -Force
+        Copy-Item -Recurse -Force ./publish/* "C:\webserver\net8iisdeploy" -ErrorAction Stop
     - name: Restart IIS
       run: |
         iisreset
