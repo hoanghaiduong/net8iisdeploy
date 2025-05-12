@@ -33,7 +33,7 @@ public class Program
         app.MapGet("/", (HttpContext httpContext) =>
         {
 
-            return "Hello World";
+            return "Hello World Change runner";
         }).WithOpenApi();
 
         app.Run();
