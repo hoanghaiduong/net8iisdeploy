@@ -27,8 +27,17 @@ jobs:
     - name: Publish
       run: dotnet publish -c Release -o ./publish
 
+    - name: Check and stop processes using the folder
+      run: |
+        $path = "C:\webserver\net8iisdeploy"
+        $lockedFiles = Get-Process | Where-Object { $_.Modules | Where-Object { $_.FileName -like "$path*" } }
+        if ($lockedFiles) {
+          $lockedFiles | Stop-Process -Force
+        }
+
     - name: Deploy to IIS folder
       run: |
+        iisreset /stop
         if (Test-Path "C:\webserver\net8iisdeploy") {
           if ((Get-Item "C:\webserver\net8iisdeploy").PSIsContainer) {
             Remove-Item -Recurse -Force "C:\webserver\net8iisdeploy" -ErrorAction SilentlyContinue
@@ -38,6 +47,7 @@ jobs:
         }
         New-Item -ItemType Directory -Path "C:\webserver\net8iisdeploy" -Force
         Copy-Item -Recurse -Force ./publish/* "C:\webserver\net8iisdeploy" -ErrorAction Stop
+        iisreset /start
     - name: Restart IIS
       run: |
         iisreset
